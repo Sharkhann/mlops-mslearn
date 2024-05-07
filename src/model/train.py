@@ -63,11 +63,25 @@ def split_data(df):
 
 # @traced
 # @logged
+# Train the model, return the model
 def train_model(reg_rate, X_train, X_test, y_train, y_test):
     # train model
-    LogisticRegression(C=1/reg_rate, solver="liblinear").fit(X_train, y_train)
-    
+    model = LogisticRegression(C=1/reg_rate, solver="liblinear").fit(data["train"]["X"], data["train"]["y"])
+    return model
     # train_model._log.info("This is an info for train_model_message")
+
+# Evaluate the metrics for the model
+# @traced
+# @logged
+def get_model_metrics(reg_model, data):
+    preds_prob = model.predict_proba(data["test"]["X"])
+    preds_deci = model.decision_function(data["test"]["X"])
+    auc_prob = roc_auc_score(preds_prob[:,1], data["test"]["y"])
+    auc_deci = roc_auc_score(preds_deci, data["test"]["y"])
+    metrics = {"auc_prob": auc_prob,
+               "auc_deci": auc_deci}
+    return metrics
+    # get_model_metrics._log.info("This is an info for get_model_metrics_message")
 
 # @traced
 # @logged

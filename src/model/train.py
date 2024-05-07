@@ -13,8 +13,8 @@ from sklearn.metrics import roc_auc_score
 import sys
 # from autologging import logged, TRACE, traced
 import mlflow
-from mlflow.models import infer_signature
-from mlflow.utils.environment import _mlflow_conda_env
+# from mlflow.models import infer_signature
+# from mlflow.utils.environment import _mlflow_conda_env
 
 
 # define functions.
@@ -22,7 +22,7 @@ from mlflow.utils.environment import _mlflow_conda_env
 # @logged
 def main(args):
     # TO DO: enable autologging
-    mlflow.autolog(log_models=True)
+    logs = mlflow.autolog()    
 
     # read data
     df = get_csvs_df(args.training_data)
@@ -31,8 +31,10 @@ def main(args):
     X_train, X_test, y_train, y_test = split_data(df)
 
     # train model
-    train_model(args.reg_rate, X_train, X_test, y_train, y_test)
+    model = train_model(args.reg_rate, data["train"]["X"], data["test"]["X"], data["train"]["y"], data["test"]["y"])
     
+    get_model_metrics
+    metrics = get_model_metrics(model, data)
     # main._log.info("This is an info for main_message")
 
 # @traced
